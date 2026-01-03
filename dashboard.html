@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DUZ Dashboard</title>
+  <link rel="stylesheet" href="styles/dashboard.css">
+    <link rel="shortcut icon" href="icon.png" type="image/x-icon" sizes="156x156">
+
+</head>
+<body>
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="logo">DUZ</div>
+    <button class="menu-btn" id="menu-btn">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <nav class="nav-links" id="nav-links">
+      <a href="index.html">Home</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="task.html">Earn</a>
+      <a href="leaderboard.html">Leaderboard</a>
+    </nav>
+  </header>
+
+  <!-- Dashboard content -->
+  <main class="dashboard">
+    <h1>Welcome, <span id="username">Guest</span></h1>
+
+    <div class="balance-card">
+      <h2>Your DUZ Balance:</h2>
+      <p id="balance">0 DUZ</p>
+    </div>
+
+    <div class="recent-rewards">
+      <h2>Recent Actions</h2>
+      <ul id="recent-list">
+        <li>No actions yet.</li>
+      </ul>
+    </div>
+  </main>
+
+  <script src="rewards.js"></script>
+  <script>
+    // Hamburger toggle
+    const btn = document.getElementById("menu-btn");
+    const nav = document.getElementById("nav-links");
+    btn.addEventListener("click", () => {
+      btn.classList.toggle("active");
+      nav.classList.toggle("open");
+    });
+
+    // Mock login
+    const userId = prompt("Enter your username:").toLowerCase() || "guest";
+    document.getElementById("username").textContent = userId;
+
+    ensureUser(userId);
+
+    // Dashboard update
+    function updateDashboard() {
+      document.getElementById("balance").textContent = users[userId].balance.toFixed(6) + " DUZ";
+
+      const recentList = document.getElementById("recent-list");
+      recentList.innerHTML = "";
+      const today = new Date().toISOString().split("T")[0];
+      const history = users[userId].history[today] || { actions: {} };
+      const actions = history.actions;
+
+      if (Object.keys(actions).length === 0) {
+        recentList.innerHTML = "<li>No actions yet.</li>";
+      } else {
+        for (const [action, count] of Object.entries(actions)) {
+          const li = document.createElement("li");
+          li.textContent = `${action}: ${count} time(s) today`;
+          recentList.appendChild(li);
+        }
+      }
+    }
+
+    updateDashboard();
+    setInterval(updateDashboard, 2000);
+  </script>
+</body>
+</html>

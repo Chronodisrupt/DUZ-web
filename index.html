@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dauuz</title>
+    <link rel="stylesheet" href="styles/index.css">
+    <link rel="shortcut icon" href="icon.png" type="image/x-icon" sizes="156x156">
+
+</head>
+
+<body>
+    <header class="navbar">
+      <div class="logo">DUZ</div>
+
+      <button class="menu-btn" id="menu-btn">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <nav class="nav-links" id="nav-links">
+        <a href="index.html">Home</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="task.html">Earn</a>
+        <a href="leaderboard.html">Leaderboard</a>
+      </nav>
+    </header>
+
+  <section class="hero">
+        <div class="logo-wrap">
+            <img src="logo.png" alt="DUZ Logo" class="logo-img">
+        </div>
+    <h1>Dauuz; Elpis</h1>
+    <p>The dangerous thing that shines bright.</p>
+
+    <p class="subtitle">
+      A fixed-supply digital token rewarding contribution, effort, and presence,
+      especially for people the world usually ignores.
+    </p>
+
+    <a class="btn" href="dashboard.html">Get Started</a>
+  </section>
+
+  <section class="panel">
+    <h2>Why DUZ?</h2>
+    <p>
+      Most systems reward capital. Dauuz rewards participation.
+      No VC allocation. No hidden minting. Just fairness and contribution.
+    </p>
+  </section>
+
+  <footer>
+    © 2026 DAUUZ : Built in public.
+  </footer>
+</body>
+<script>
+  const btn = document.getElementById("menu-btn");
+  const links = document.getElementById("nav-links");
+
+  btn.addEventListener("click", () => {
+    btn.classList.toggle("active");
+    links.classList.toggle("open");
+  });
+</script>
+</html>

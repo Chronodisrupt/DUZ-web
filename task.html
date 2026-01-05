@@ -1,25 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Earn DUZ</title>
-  <link rel="stylesheet" href="styles/task.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Earn DUZ</title>
+    <link rel="stylesheet" href="styles/tasks.css">
+    <link rel="shortcut icon" href="icon.png" type="image/x-icon" sizes="156x156">
+
 </head>
 <body>
-  <!-- Navbar -->
+
   <header class="navbar">
-    <div class="logo">DUZ</div>
-    <button class="menu-btn" id="menu-btn">
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
+    <div class="logo"><img src="logo.png" alt="DUZ" ></div>
+    <button class="menu-btn" id="menu-btn"><span></span><span></span><span></span></button>
     <nav class="nav-links" id="nav-links">
       <a href="index.html">Home</a>
       <a href="dashboard.html">Dashboard</a>
-      <a href="tasks.html">Earn DUZ</a>
+      <a href="task.html">Earn DUZ</a>
       <a href="leaderboard.html">Leaderboard</a>
+      <a href="login.html" id="logout-btn">Logout</a>
     </nav>
   </header>
 
@@ -29,56 +28,26 @@
     <div class="task-card">
       <h2>Referral</h2>
       <p>Reward: 0.01 DUZ</p>
-      <button onclick="completeTask(userId, 'Referral')">Complete Referral</button>
+      <button id="referral-btn">Generate Referral Link</button>
+      <p id="referral-link"></p>
     </div>
 
     <div class="task-card">
       <h2>Awareness / Post</h2>
       <p>Reward: 0.0125 DUZ per post (max 4/day)</p>
-      <button onclick="completeTask(userId, 'Awareness')">Submit Post</button>
+      <input type="file" id="awareness-file" accept="image/*"><br>
+      <button id="awareness-btn">Submit Post</button>
     </div>
 
     <div class="task-card">
-      <h2>Survey</h2>
-      <p>Reward: 0.025 DUZ (once per user)</p>
-      <button onclick="completeTask(userId, 'Survey')">Complete Survey</button>
-    </div>
-
-    <div class="task-card">
-      <h2>Innovative Idea</h2>
-      <p>Reward: 1 DUZ (rare)</p>
-      <button onclick="completeTask(userId, 'Innovative Idea')">Submit Idea</button>
-    </div>
-
-    <div class="task-card">
-      <h2>Ground-breaking Idea</h2>
-      <p>Reward: 10 DUZ (very rare)</p>
-      <button onclick="completeTask(userId, 'Ground-breaking')">Submit Ground-breaking Idea</button>
+      <h2>Ideas</h2>
+      <textarea id="ideaContent" placeholder="Type your idea here..."></textarea><br>
+      <button id="idea-btn">Submit Idea</button>
     </div>
   </main>
+  
 
-  <script src="rewards.js"></script>
-  <script>
-    // Hamburger toggle
-    const btn = document.getElementById("menu-btn");
-    const nav = document.getElementById("nav-links");
-    btn.addEventListener("click", () => {
-      btn.classList.toggle("active");
-      nav.classList.toggle("open");
-    });
-
-    // Mock login
-    const userId = prompt("Enter your username:").toLowerCase() || "guest";
-    ensureUser(userId);
-
-    function completeTask(userId, task) {
-      const earned = reward(userId, task); // reward from rewards.js
-      if (earned > 0) {
-        alert(`You earned ${earned.toFixed(6)} DUZ for "${task}"!`);
-      } else {
-        alert(`Task "${task}" cannot be completed right now.`);
-      }
-    }
-  </script>
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <script src="js/tasks.js"></script>
 </body>
 </html>

@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DUZ Leaderboard</title>
-  <link rel="stylesheet" href="styles/leaderboard.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard</title>
+    <link rel="stylesheet" href="styles/leaderboard.css">
+    <link rel="shortcut icon" href="icon.png" type="image/x-icon" sizes="156x156">
+
 </head>
 <body>
   <!-- Navbar -->
   <header class="navbar">
-    <div class="logo">DUZ</div>
+    <div class="logo"><img src="logo.png" alt="DUZ"></div>
     <button class="menu-btn" id="menu-btn">
       <span></span><span></span><span></span>
     </button>
@@ -18,6 +20,7 @@
       <a href="dashboard.html">Dashboard</a>
       <a href="task.html">Earn DUZ</a>
       <a href="leaderboard.html">Leaderboard</a>
+      <a href="login.html" id="logout-btn">Logout</a>
     </nav>
   </header>
 
@@ -28,149 +31,19 @@
     </ul>
   </main>
 
-  <script src="js/rewards.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/leaderboard.js"></script>
+
   <script>
-    // Hamburger toggle
-    const btn = document.getElementById("menu-btn");
-    const nav = document.getElementById("nav-links");
-    btn.addEventListener("click", () => {
-      btn.classList.toggle("active");
-      nav.classList.toggle("open");
-    });
+  const btn = document.getElementById("menu-btn");
+  const links = document.getElementById("nav-links");
 
-    // Mock login to create some users if none exist
-    const userId = prompt("Enter your username:").toLowerCase() || "guest";
-    ensureUser(userId);
-
-    // Update leaderboard
-    function updateLeaderboard() {
-      const leaderboardList = document.getElementById("leaderboard-list");
-      leaderboardList.innerHTML = "";
-
-      const userArray = Object.entries(users).map(([id, data]) => ({
-        id,
-        balance: data.balance
-      }));
-
-      userArray.sort((a, b) => b.balance - a.balance);
-      const topUsers = userArray.slice(0, 10);
-
-      topUsers.forEach((user, index) => {
-        const li = document.createElement("li");
-        li.textContent = `${index + 1}. ${user.id} — ${user.balance.toFixed(6)} DUZ`;
-        leaderboardList.appendChild(li);
-      });
-    }
-
-    setInterval(updateLeaderboard, 2000);
-
-
-    function updateLeaderboard() {
-  const leaderboardList = document.getElementById("leaderboard-list");
-  leaderboardList.innerHTML = "";
-
-  // convert users object to array
-  const userArray = Object.entries(users).map(([id, data]) => ({
-    id,
-    balance: data.balance
-  }));
-
-  // sort descending by balance
-  userArray.sort((a, b) => b.balance - a.balance);
-
-  // take top 10
-  const topUsers = userArray.slice(0, 10);
-
-  topUsers.forEach((user, index) => {
-    const li = document.createElement("li");
-    li.textContent = `${index + 1}. ${user.id} — ${user.balance.toFixed(6)} DUZ`;
-    leaderboardList.appendChild(li);
+  btn.addEventListener("click", () => {
+    btn.classList.toggle("active");
+    links.classList.toggle("open");
   });
-}
-
-// update every 2 seconds
-setInterval(updateLeaderboard, 2000);
-const leaderboardList = document.getElementById("leaderboard-list");
-
-function renderLeaderboard() {
-  leaderboardList.innerHTML = "";
-
-  const userArray = Object.entries(users).map(([id, data]) => ({
-    id,
-    balance: data.balance
-  }));
-
-  userArray.sort((a, b) => b.balance - a.balance);
-  const topUsers = userArray.slice(0, 10);
-
-  topUsers.forEach((user, index) => {
-    const li = document.createElement("li");
-    li.textContent = `${index + 1}. ${user.id} — ${user.balance.toFixed(6)} DUZ`;
-
-    // Animate changes
-    li.style.opacity = 0;
-    leaderboardList.appendChild(li);
-    setTimeout(() => {
-      li.style.transition = "opacity 0.5s ease, transform 0.5s ease";
-      li.style.opacity = 1;
-      li.style.transform = "translateY(0)";
-    }, 50);
-  });
-}
-
-// Subscribe to live updates
-subscribeLeaderboard(renderLeaderboard);
-
-// Initial render
-renderLeaderboard();
-
-
-
-
-
-
-
-function animateEarn(userId, amount) {
-  const userElement = Array.from(leaderboardList.children)
-    .find(li => li.textContent.includes(userId));
-
-  if (!userElement) return;
-
-  const plus = document.createElement("span");
-  plus.textContent = ` +${amount.toFixed(6)} DUZ`;
-  plus.style.color = "#d4a254";
-  plus.style.fontWeight = "bold";
-  plus.style.marginLeft = "8px";
-  plus.style.opacity = 0;
-  plus.style.transition = "all 0.8s ease";
-  userElement.appendChild(plus);
-
-  setTimeout(() => {
-    plus.style.opacity = 1;
-    plus.style.transform = "translateY(-10px)";
-  }, 50);
-
-  setTimeout(() => {
-    userElement.removeChild(plus);
-  }, 1000);
-}
-
-// Hook animation to earnDUZ
-const originalEarnDUZ = earnDUZ;
-earnDUZ = function(userId, task, amount) {
-  originalEarnDUZ(userId, task, amount);
-  animateEarn(userId, amount);
-};
-
-
-
-
-
-
-
-  </script>
-
-
+</script>
 
 </body>
 </html>
+

@@ -1,6 +1,6 @@
-// ---------------------
+ 
 // Hamburger toggle
-// ---------------------
+
 const btn = document.getElementById("menu-btn");
 const nav = document.getElementById("nav-links");
 btn.addEventListener("click", () => {
@@ -17,9 +17,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-// ---------------------
+ 
 // Leaderboard rendering
-// ---------------------
+ 
 const leaderboardList = document.getElementById("leaderboard-list");
 
 async function renderLeaderboard() {
@@ -27,7 +27,7 @@ async function renderLeaderboard() {
 
   // Fetch top 10 users by balance
   const { data: users, error } = await supabase
-    .from("users")
+    .from("profiles")
     .select("username, balance")
     .order("balance", { ascending: false })
     .limit(10);
@@ -39,7 +39,7 @@ async function renderLeaderboard() {
 
   users.forEach((user, index) => {
     const li = document.createElement("li");
-    li.textContent = `${index + 1}. ${user.username} — ${user.balance.toFixed(6)} DUZ`;
+    li.textContent = `${index + 1}. ${user.username} : ${user.balance.toFixed(6)} DUZ`;
     li.style.opacity = 0;
     leaderboardList.appendChild(li);
 
@@ -51,9 +51,9 @@ async function renderLeaderboard() {
   });
 }
 
-// ---------------------
-// Live refresh every 2 seconds
-// ---------------------
+ 
+// Live refresh every 20 seconds
+ 
 renderLeaderboard();
 setInterval(renderLeaderboard, 20000);
 
@@ -61,3 +61,4 @@ setInterval(renderLeaderboard, 20000);
 
 
 });
+

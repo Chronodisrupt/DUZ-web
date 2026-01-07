@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         user_id: userId,
         task_type: "feedback",
         content: content,
-        reward: 0.05,      // reward DUZ
+        reward: 0.0014,      // reward DUZ
         status: "pending",
         created_at: new Date().toISOString()
       });

@@ -1,4 +1,4 @@
-  
+ 
 // Hamburger toggle
  
 const btn = document.getElementById("menu-btn");
@@ -57,7 +57,7 @@ document.getElementById("referral-btn").addEventListener("click", async () => {
     task_type: "Referral",
     content: referralCode,
     status: 'pending',
-    reward: '0.01'
+    reward: '0.001'
   });
 
   if(taskError) return alert(taskError.message);
@@ -98,6 +98,20 @@ document.getElementById("referral-btn").addEventListener("click", async () => {
 
 
   });
+
+
+
+
+
+  document.getElementById("feedback-btn").addEventListener("click", () =>{
+    window.location.href = 'feedback.html';
+  });
+
+
+
+  document.getElementById("routine-btn").addEventListener("click", () =>{
+    window.location.href = "daily.html"
+  })
 
 
 
@@ -156,5 +170,4 @@ document.getElementById("awareness-btn").addEventListener("click", async () => {
 }); 
 
 }); 
-
 

@@ -11,12 +11,12 @@
 <body>
 
   <header class="navbar">
-    <div class="logo"><img src="logo.png" alt="DUZ" class="logo" ></div>
+    <div class="logo"><img src="logo.png" alt="DUZ" class="logo"></div>
     <button class="menu-btn" id="menu-btn"><span></span><span></span><span></span></button>
     <nav class="nav-links" id="nav-links">
       <a href="index.html">Home</a>
       <a href="dashboard.html">Dashboard</a>
-      <a href="task.html">Earn DUZ</a>
+      <a href="task.html">Tasks</a>
       <a href="leaderboard.html">Leaderboard</a>
       <a href="login.html" id="logout-btn">Logout</a>
     </nav>
@@ -27,32 +27,39 @@
 
     <div class="task-card">
       <h2>Referral</h2>
-      <p>Reward: 0.01 DUZ</p>
+      <p>Reward: 0.001 DUZ</p>
       <button id="referral-btn">Generate Referral Link</button>
       <p id="referral-link"></p>
     </div>
 
     <div class="task-card">
       <h2>Creat Post on x</h2>
-      <p>Reward: 0.0125 DUZ per post (max 4/day)</p>
+      <p>Reward: 0.00125 DUZ per post (max 4/day)</p>
       <input type="file" id="awareness-file" accept="image/*"><br>
       <button id="awareness-btn">Submit Post</button>
     </div>
     
     <div class="task-card">
       <h2>Survey</h2>
-      <p>Reward: 0.05 DUZ</p>
+      <p>Reward: 0.005 DUZ</p>
       <button id="survey-btn">Take Survey</button>
     </div>
 
     <div class="task-card">
       <h2>Send Feedback</h2>
-      <p>Reward: 0.05 DUZ</p>
+      <p>Reward: 0.0014 DUZ</p>
       <button id="feedback-btn"><a href="feedback.html" style="text-decoration: none; color: #0f0f0f;">Tell us about your experience</a></button>
+    </div>
+
+      <div class="task-card">
+      <h2>Wellness Routine</h2>
+      <p>Reward: 0.005 DUZ</p>
+      <button id="routine-btn"><a href="daily.html" style="text-decoration: none; color: #0f0f0f;">Tell us about your experience</a></button>
     </div>
 
     <div class="task-card">
       <h2>Ideas</h2>
+      <p>Reward: 1 DUZ (if your idead is genuine and the team adopt it)</p>
       <textarea id="ideaContent" placeholder="Type your idea here..."></textarea><br>
       <button id="idea-btn">Submit Idea</button>
     </div>

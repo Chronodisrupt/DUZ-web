@@ -35,17 +35,31 @@ function authInit(mode) {
       if (!isValidEmail(email)) return alert("Please enter a valid email");
 
       const deviceId = getDeviceId();
-      const { data: existing } = await supabaseClient
+
+      // Check if this device already signed up
+      const { data: existingProfile } = await supabaseClient
         .from("profiles")
         .select("id")
         .eq("device_id", deviceId)
         .single();
-      if (existing) return alert("This device has already been used to sign up.");
 
-      const { data, error } = await supabaseClient.auth.signUp({ email, password });
-      if (error) return alert(error.message);
-      const user = data.user;
+      if (existingProfile) return alert("This device has already been used to sign up.");
 
+      // Create auth user
+      const { data: authData, error: authError } = await supabaseClient.auth.signUp({ email, password });
+      if (authError) return alert(authError.message);
+      const userId = authData.user?.id;
+      if (!userId) return alert("Failed to create user. Try again.");
+
+      // Check if profile already exists (safety check)
+      const { data: existing, error: checkErr } = await supabaseClient
+        .from("profiles")
+        .select("id")
+        .eq("id", userId)
+        .single();
+      if (existing) return alert("Profile already exists. Try logging in.");
+
+      // Handle referral
       let referredBy = null;
       let referrerId = null;
       if (referralCode) {
@@ -54,39 +68,36 @@ function authInit(mode) {
           .select("id, username, balance")
           .eq("referral_code", referralCode)
           .single();
-        if (refError || !refUser) return alert("Invalid referral code");
-        referredBy = refUser.username;
-        referrerId = refUser.id;
+        if (!refError && refUser) {
+          referredBy = refUser.username;
+          referrerId = refUser.id;
+        }
       }
 
-      const { error: profileError } = await supabaseClient
-        .from("profiles")
-        .insert({
-          id: user.id,
-          full_name,
-          username,
-          phone,
-          email,
-          device_id: deviceId,
-          referral_code: username,
-          referred_by: referredBy,
-          balance: 0
-        });
+      // Insert new profile
+      const { error: profileError } = await supabaseClient.from("profiles").insert({
+        id: userId,
+        full_name,
+        username,
+        phone,
+        email,
+        device_id: deviceId,
+        referral_code: username,
+        referred_by: referredBy,
+        balance: 0
+      });
       if (profileError) return alert(profileError.message);
 
+      // Apply referral bonus if valid
       if (referrerId) {
-        const { data: refData, error: getError } = await supabaseClient
+        const { data: refData, error: balErr } = await supabaseClient
           .from("profiles")
           .select("balance")
           .eq("id", referrerId)
           .single();
-        if (!getError) {
+        if (!balErr) {
           const newBalance = (refData?.balance || 0) + 0.01;
-          const { error: bonusError } = await supabaseClient
-            .from("profiles")
-            .update({ balance: newBalance })
-            .eq("id", referrerId);
-          if (bonusError) console.error(bonusError.message);
+          await supabaseClient.from("profiles").update({ balance: newBalance }).eq("id", referrerId);
         }
       }
 
@@ -102,14 +113,12 @@ function authInit(mode) {
     btn.addEventListener("click", async () => {
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value;
-
       if (!email || !password) return alert("Please enter email and password");
 
       const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
       if (error) return alert(error.message);
 
       localStorage.setItem("user_session", JSON.stringify(data.session));
-
       alert("Logged in!");
       window.location.href = "dashboard.html";
     });
@@ -136,4 +145,4 @@ function authInit(mode) {
 async function protectPage() {
   const { data: { session } } = await supabaseClient.auth.getSession();
   if (!session) window.location.href = "login.html";
-}
+        }

@@ -3,14 +3,10 @@ const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 // --- Helper functions ---
-
-// Basic email validation
 function isValidEmail(email) {
-  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return re.test(email);
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
-// Generate a simple device fingerprint
 function getDeviceId() {
   let id = localStorage.getItem("device_id");
   if (!id) {
@@ -22,42 +18,34 @@ function getDeviceId() {
 
 // --- Main function ---
 function authInit(mode) {
-
+  /* ---------- SIGNUP ---------- */
   if (mode === "signup") {
     const btn = document.getElementById("signup-btn");
+    if (!btn) return;
     btn.addEventListener("click", async () => {
-
       const full_name = document.getElementById("name").value.trim();
       const username = document.getElementById("username").value.trim();
       const phone = document.getElementById("phone").value.trim();
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value;
-      const referralCode = document.getElementById("referral")?.value.trim(); // optional
+      const referralCode = document.getElementById("referral")?.value.trim();
 
-      // --- Validation ---
-      if (!full_name || !username || !phone || !email || !password) {
+      if (!full_name || !username || !phone || !email || !password)
         return alert("All fields are required");
-      }
-
       if (!isValidEmail(email)) return alert("Please enter a valid email");
 
       const deviceId = getDeviceId();
-
-      // Check if device already has an account
-      const { data: existing, error: exErr } = await supabaseClient
+      const { data: existing } = await supabaseClient
         .from("profiles")
         .select("id")
         .eq("device_id", deviceId)
         .single();
-
       if (existing) return alert("This device has already been used to sign up.");
 
-      // --- Create auth user ---
       const { data, error } = await supabaseClient.auth.signUp({ email, password });
       if (error) return alert(error.message);
       const user = data.user;
 
-      // --- Referral ---
       let referredBy = null;
       let referrerId = null;
       if (referralCode) {
@@ -66,13 +54,11 @@ function authInit(mode) {
           .select("id, username, balance")
           .eq("referral_code", referralCode)
           .single();
-
         if (refError || !refUser) return alert("Invalid referral code");
         referredBy = refUser.username;
         referrerId = refUser.id;
       }
 
-      // --- Insert profile with device_id ---
       const { error: profileError } = await supabaseClient
         .from("profiles")
         .insert({
@@ -86,24 +72,20 @@ function authInit(mode) {
           referred_by: referredBy,
           balance: 0
         });
-
       if (profileError) return alert(profileError.message);
 
-      // Update referrer balance
       if (referrerId) {
         const { data: refData, error: getError } = await supabaseClient
           .from("profiles")
           .select("balance")
           .eq("id", referrerId)
           .single();
-
         if (!getError) {
-          const newBalance = (refData?.balance || 0) + 0.01; // 1/10th original reward
+          const newBalance = (refData?.balance || 0) + 0.01;
           const { error: bonusError } = await supabaseClient
             .from("profiles")
             .update({ balance: newBalance })
             .eq("id", referrerId);
-
           if (bonusError) console.error(bonusError.message);
         }
       }
@@ -113,8 +95,10 @@ function authInit(mode) {
     });
   }
 
+  /* ---------- LOGIN ---------- */
   if (mode === "login") {
     const btn = document.getElementById("login-btn");
+    if (!btn) return;
     btn.addEventListener("click", async () => {
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value;
@@ -130,6 +114,22 @@ function authInit(mode) {
       window.location.href = "dashboard.html";
     });
   }
+
+  /* ---------- FORGOT PASSWORD ---------- */
+  const forgot = document.getElementById("forgot-password");
+  if (forgot) {
+    forgot.onclick = async () => {
+      const email = document.getElementById("email").value.trim();
+      if (!email) return alert("Enter your email first");
+
+      const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+        redirectTo: "https://chronodisrupt.github.io/DUZ-web/reset-password.html"
+      });
+
+      if (error) alert(error.message);
+      else alert("Password reset email sent!");
+    };
+  }
 }
 
 // Optional: protect pages
@@ -137,5 +137,3 @@ async function protectPage() {
   const { data: { session } } = await supabaseClient.auth.getSession();
   if (!session) window.location.href = "login.html";
 }
-
-
